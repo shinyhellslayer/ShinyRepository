@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SimpleExcelApp.Model;
 
 namespace SimpleExcelApp
 {
@@ -88,124 +89,126 @@ namespace SimpleExcelApp
         private void dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             Mathematics math = new Mathematics();
+            MathExpression mathExpression = new MathExpression();
+            ExpressionValues expresionValue = new ExpressionValues();
+            GridProperty gridProperty = new GridProperty();
+
             try
             {
                 if (dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
                 {
-                    string text = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                    string cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
 
                     //Define the Mathematical expressions needed and check the value that wi determine the calculation
-                    int[] mathSymbol = new int[5];
-                    mathSymbol[0] = text.IndexOf('+');
-                    mathSymbol[1] = text.IndexOf('-');
-                    mathSymbol[2] = text.IndexOf('*');
-                    mathSymbol[3] = text.IndexOf('/');
-                    string mathCalculationSymbol = null;
-                    int mathExpressionSymbol = text.IndexOf('=');
-
-                    //Check which mathematical expression is used 
-                    for (int check = 0; check < mathSymbol.Length; check++)
-                    {
-                        if (mathSymbol[check] != -1)
-                        {
-                            mathSymbol[4] = mathSymbol[check];
-                            mathCalculationSymbol = text.Substring(mathSymbol[check], 1);
-                        }
-                    }
+                    mathExpression = math.MathExpression(cell);
 
                     //Check if a calculation needs to happen
-                    if (mathExpressionSymbol != -1)
+                    if (mathExpression.mathExpressionSymbol != -1)
                     {
-                        int[] index = new int[dataGridView.ColumnCount];
+                        gridProperty.column = new int[dataGridView.ColumnCount];
+                        gridProperty.row = new int[dataGridView.RowCount];
+                        expresionValue.value = new string[dataGridView.ColumnCount];
                         Alphabet.AlphabetEnum rowIndex = (Alphabet.AlphabetEnum)e.RowIndex;
                         string[] names = Enum.GetNames(rowIndex.GetType());
 
                         //Check if a cell value is used with the enum provided
                         for (int i = 0; i < names.Length; i++)
                         {
-                            if (names[i] == text.Substring(mathExpressionSymbol + 1, mathExpressionSymbol + 1))
+                            if (names[i] == cell.Substring(mathExpression.mathExpressionSymbol + 1, mathExpression.mathExpressionSymbol + 1))
                             {
-                                index[0] = i;
+                                gridProperty.column[0] = i;
                                 break;
                             }
                             else
                             {
-                                index[0] = -1;
+                                gridProperty.column[0] = -1;
                             }
                         }
 
+                        // gridProperty.column = Alphabet.AlphabetLetter(mathExpression, cell,e.RowIndex,0);
+
                         //Check if a cell value is used or if it is a fixed numerical value
-                        string value1 = null;
-                        if (index[0] != -1)
+                        if (gridProperty.column[0] != -1)
                         {
                             //If a cell value is used use the cell value
-                            int num = Convert.ToInt32(text.Substring(mathExpressionSymbol + 2, mathSymbol[4] - (mathExpressionSymbol + 2)));
-                            if (dataGridView.Rows[num - 1].Cells[index[0]].Value != null)
+                            if(mathExpression.mathSymbol[4] != 0)
                             {
-                                value1 = dataGridView.Rows[num - 1].Cells[index[0]].Value.ToString();
+                                gridProperty.row[0] = Convert.ToInt32(cell.Substring(mathExpression.mathExpressionSymbol + 2, mathExpression.mathSymbol[4] - (mathExpression.mathExpressionSymbol + 2)));
+                                if (dataGridView.Rows[gridProperty.row[0] - 1].Cells[gridProperty.column[0]].Value != null)
+                                {
+                                    expresionValue.value[0] = dataGridView.Rows[gridProperty.row[0] - 1].Cells[gridProperty.column[0]].Value.ToString();
+                                }
                             }
+                            else
+                            {
+                                gridProperty.row[0] = Convert.ToInt32(cell.Substring(mathExpression.mathExpressionSymbol + 2));
+                                //gridProperty.column[0] = dataGridView.Rows[gridProperty.row[0] - 1].Cells[gridProperty.column[0]].Value.ToString()
+                                dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = dataGridView.Rows[gridProperty.row[0]-1].Cells[gridProperty.column[0]].Value.ToString();
+                            }
+                           
                         }
                         else
                         {
-                            int num = Convert.ToInt32(text.Substring(mathExpressionSymbol + 1, mathSymbol[4] - 1));
-                            value1 = num.ToString();
+                            gridProperty.row[0] = Convert.ToInt32(cell.Substring(mathExpression.mathExpressionSymbol + 1, mathExpression.mathSymbol[4] - 1));
+                            expresionValue.value[0] = gridProperty.row[0].ToString();
                         }
-
-                        string value2 = null;
-                        // Check the length of the cell tect to make sure it is cell values or some cell values
-                        if (text.Length > 3)
+                        
+                        // Check the length of the cell text to make sure it is cell values or some cell values
+                        if (cell.Length > 3)
                         {
                             for (int j = 0; j < names.Length; j++)
                             {
-                                if (names[j] == text.Substring(mathSymbol[4] + 1, 1))
+                                if (names[j] == cell.Substring(mathExpression.mathSymbol[4] + 1, 1))
                                 {
-                                    index[1] = j;
+                                    gridProperty.column[1] = j;
                                     break;
                                 }
                                 else
                                 {
-                                    index[1] = -1;
+                                    gridProperty.column[1] = -1;
                                 }
                             }
 
+                            //gridProperty.column = Alphabet.AlphabetLetter(mathExpression, cell, e.RowIndex, 1);
+
                             //Check if a cell value is used or if it is a fixed numerical value
-                            if (index[1] != -1)
+                            if (gridProperty.column[1] != -1)
                             {
                                 //If a cell value is used use the cell value
-                                int num2 = Convert.ToInt32(text.Substring(mathSymbol[4] + 2));
-                                if (dataGridView.Rows[num2 - 1].Cells[index[1]].Value != null)
+                                gridProperty.row[1] = Convert.ToInt32(cell.Substring(mathExpression.mathSymbol[4] + 2));
+                                if (dataGridView.Rows[gridProperty.row[1] - 1].Cells[gridProperty.column[1]].Value != null)
                                 {
-                                    value2 = dataGridView.Rows[num2 - 1].Cells[index[1]].Value.ToString();
+                                    expresionValue.value[1] = dataGridView.Rows[gridProperty.row[1] - 1].Cells[gridProperty.column[1]].Value.ToString();
                                 }
                             }
                             else
                             {
-                                int num2 = Convert.ToInt32(text.Substring(mathSymbol[4] + 1));
-                                value2 = num2.ToString();
+                                gridProperty.row[1] = Convert.ToInt32(cell.Substring(mathExpression.mathSymbol[4] + 1));
+                                expresionValue.value[1] = gridProperty.row[1].ToString();
                             }
                         }
                         else
                         {
-                            mathCalculationSymbol = "default";
+                            mathExpression.mathCalculationSymbol = "default";
                         }
 
                         //Switch to call the right Mathermatical Expression
-                        switch (mathCalculationSymbol)
+                        switch (mathExpression.mathCalculationSymbol)
                         {
                             case "+":
-                                dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.Add(value1, value2);
+                                dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.Add(expresionValue);
                                 break;
                             case "-":
-                                dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.Subtract(value1, value2);
+                                dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.Subtract(expresionValue);
                                 break;
                             case "*":
-                                dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.Multiply(value1, value2);
+                                dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.Multiply(expresionValue);
                                 break;
                             case "/":
-                                dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.Devide(value1, value2);
+                                dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.Devide(expresionValue);
                                 break;
                             default:
-                                dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = value1;
+                               // dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = expresionValue.value[0];
                                 break;
                         }
                     }
@@ -220,19 +223,18 @@ namespace SimpleExcelApp
         
         private void dataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            //object value = dataGridView.Columns[e.ColumnIndex].HeaderCell.Value;
-            //object value2 = dataGridView.Rows[e.ColumnIndex].HeaderCell.Value;
-            //bool clickFlag = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null;
-            //if (clickFlag)
-            //{
-            //    string text = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-            //    string text2 = text.Substring(0);
-            //    bool flag2 = text.Substring(0) == "=";
-            //    if (flag2)
-            //    {
-            //        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = e.ColumnIndex + e.RowIndex;
-            //    }
-            //}
+            object value = dataGridView.Columns[e.ColumnIndex].HeaderCell.Value;
+            object value2 = dataGridView.Rows[e.ColumnIndex].HeaderCell.Value;
+
+            if (dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
+            {
+                string text = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                string text2 = text.Substring(0);
+                if (text.Substring(0) == "=")
+                {
+                    dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = e.ColumnIndex + e.RowIndex;
+                }
+            }
         }
     }
 }
