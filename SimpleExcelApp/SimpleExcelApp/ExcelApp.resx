@@ -117,4 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="richTextBox1.Text" xml:space="preserve">
+    <value>1. The below Simple Excel app can only take 2 arguments for calculations and only uses the basic mathematical expressions namely: +,-,*,/
+2 .For an example of the functionality: =A1+B2, =C5*A1,=C6-C5,=B2/C5, the = expression will tell the cell that a calculation is to follow otherwise it will see it as normal Text.</value>
+  </data>
 </root>

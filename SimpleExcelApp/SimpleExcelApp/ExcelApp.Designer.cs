@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExcelApp));
             this.ColumntextBox = new System.Windows.Forms.TextBox();
             this.RowtextBox = new System.Windows.Forms.TextBox();
             this.Columnlabel = new System.Windows.Forms.Label();
             this.Rowlabel = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -80,11 +82,21 @@
             this.dataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellClick);
             this.dataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellEndEdit);
             // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(270, 12);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.Size = new System.Drawing.Size(828, 47);
+            this.richTextBox1.TabIndex = 5;
+            this.richTextBox1.Text = resources.GetString("richTextBox1.Text");
+            // 
             // ExcelApp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1330, 613);
+            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.Rowlabel);
             this.Controls.Add(this.Columnlabel);
@@ -105,6 +117,7 @@
         private System.Windows.Forms.Label Columnlabel;
         private System.Windows.Forms.Label Rowlabel;
         private System.Windows.Forms.DataGridView dataGridView;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
 
