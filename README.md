@@ -1,4 +1,4 @@
-Project Title
+Simple Excel Application
 
 A Simple Excel Application to demonstrate the functionality of Excel.
 
