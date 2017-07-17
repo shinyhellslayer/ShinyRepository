@@ -61,7 +61,7 @@ namespace SimpleExcelApp.Tests
         {
             MathExpression mathExpressionLocal = new MathExpression();
             string text = "=1+1";
-            mathExpressionLocal = math.MathExpression(text);
+            //mathExpressionLocal = math.MathExpression(text,2);
         }
     }
 }

@@ -100,118 +100,120 @@ namespace SimpleExcelApp
                     string cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
 
                     //Define the Mathematical expressions needed and check the value that wi determine the calculation
-                    mathExpression = math.MathExpression(cell);
+                    // mathExpression = math.MathExpression(cell, dataGridView.ColumnCount);
+
+                    dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.MathExpression(cell, dataGridView.ColumnCount);
 
                     //Check if a calculation needs to happen
-                    if (mathExpression.mathExpressionSymbol != -1)
-                    {
-                        gridProperty.column = new int[dataGridView.ColumnCount];
-                        gridProperty.row = new int[dataGridView.RowCount];
-                        expresionValue.value = new string[dataGridView.ColumnCount];
-                        Alphabet.AlphabetEnum rowIndex = (Alphabet.AlphabetEnum)e.RowIndex;
-                        string[] names = Enum.GetNames(rowIndex.GetType());
+                    //if (mathExpression.mathExpressionSymbol != -1)
+                    //{
+                    //    gridProperty.column = new int[dataGridView.ColumnCount];
+                    //    gridProperty.row = new int[dataGridView.RowCount];
+                    //    expresionValue.value = new string[dataGridView.ColumnCount];
+                    //    Alphabet.AlphabetEnum rowIndex = (Alphabet.AlphabetEnum)e.RowIndex;
+                    //    string[] names = Enum.GetNames(rowIndex.GetType());
 
-                        //Check if a cell value is used with the enum provided
-                        for (int i = 0; i < names.Length; i++)
-                        {
-                            if (names[i] == cell.Substring(mathExpression.mathExpressionSymbol + 1, mathExpression.mathExpressionSymbol + 1))
-                            {
-                                gridProperty.column[0] = i;
-                                break;
-                            }
-                            else
-                            {
-                                gridProperty.column[0] = -1;
-                            }
-                        }
+                    //    //Check if a cell value is used with the enum provided
+                    //    for (int i = 0; i < names.Length; i++)
+                    //    {
+                    //        if (names[i] == cell.Substring(mathExpression.mathExpressionSymbol + 1, mathExpression.mathExpressionSymbol + 1))
+                    //        {
+                    //            gridProperty.column[0] = i;
+                    //            break;
+                    //        }
+                    //        else
+                    //        {
+                    //            gridProperty.column[0] = -1;
+                    //        }
+                    //    }
 
-                        // gridProperty.column = Alphabet.AlphabetLetter(mathExpression, cell,e.RowIndex,0);
+                    //    // gridProperty.column = Alphabet.AlphabetLetter(mathExpression, cell,e.RowIndex,0);
 
-                        //Check if a cell value is used or if it is a fixed numerical value
-                        if (gridProperty.column[0] != -1)
-                        {
-                            //If a cell value is used use the cell value
-                            if(mathExpression.mathSymbol[4] != 0)
-                            {
-                                gridProperty.row[0] = Convert.ToInt32(cell.Substring(mathExpression.mathExpressionSymbol + 2, mathExpression.mathSymbol[4] - (mathExpression.mathExpressionSymbol + 2)));
-                                if (dataGridView.Rows[gridProperty.row[0] - 1].Cells[gridProperty.column[0]].Value != null)
-                                {
-                                    expresionValue.value[0] = dataGridView.Rows[gridProperty.row[0] - 1].Cells[gridProperty.column[0]].Value.ToString();
-                                }
-                            }
-                            else
-                            {
-                                gridProperty.row[0] = Convert.ToInt32(cell.Substring(mathExpression.mathExpressionSymbol + 2));
-                                //gridProperty.column[0] = dataGridView.Rows[gridProperty.row[0] - 1].Cells[gridProperty.column[0]].Value.ToString()
-                                dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = dataGridView.Rows[gridProperty.row[0]-1].Cells[gridProperty.column[0]].Value.ToString();
-                            }
+                    //    //Check if a cell value is used or if it is a fixed numerical value
+                    //    if (gridProperty.column[0] != -1)
+                    //    {
+                    //        //If a cell value is used use the cell value
+                    //        if(mathExpression.mathSymbol[4] != 0)
+                    //        {
+                    //            gridProperty.row[0] = Convert.ToInt32(cell.Substring(mathExpression.mathExpressionSymbol + 2, mathExpression.mathSymbol[4] - (mathExpression.mathExpressionSymbol + 2)));
+                    //            if (dataGridView.Rows[gridProperty.row[0] - 1].Cells[gridProperty.column[0]].Value != null)
+                    //            {
+                    //                expresionValue.value[0] = dataGridView.Rows[gridProperty.row[0] - 1].Cells[gridProperty.column[0]].Value.ToString();
+                    //            }
+                    //        }
+                    //        else
+                    //        {
+                    //            gridProperty.row[0] = Convert.ToInt32(cell.Substring(mathExpression.mathExpressionSymbol + 2));
+                    //            //gridProperty.column[0] = dataGridView.Rows[gridProperty.row[0] - 1].Cells[gridProperty.column[0]].Value.ToString()
+                    //            dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = dataGridView.Rows[gridProperty.row[0]-1].Cells[gridProperty.column[0]].Value.ToString();
+                    //        }
                            
-                        }
-                        else
-                        {
-                            gridProperty.row[0] = Convert.ToInt32(cell.Substring(mathExpression.mathExpressionSymbol + 1, mathExpression.mathSymbol[4] - 1));
-                            expresionValue.value[0] = gridProperty.row[0].ToString();
-                        }
+                    //    }
+                    //    else
+                    //    {
+                    //        gridProperty.row[0] = Convert.ToInt32(cell.Substring(mathExpression.mathExpressionSymbol + 1, mathExpression.mathSymbol[4] - 1));
+                    //        expresionValue.value[0] = gridProperty.row[0].ToString();
+                    //    }
                         
-                        // Check the length of the cell text to make sure it is cell values or some cell values
-                        if (cell.Length > 3)
-                        {
-                            for (int j = 0; j < names.Length; j++)
-                            {
-                                if (names[j] == cell.Substring(mathExpression.mathSymbol[4] + 1, 1))
-                                {
-                                    gridProperty.column[1] = j;
-                                    break;
-                                }
-                                else
-                                {
-                                    gridProperty.column[1] = -1;
-                                }
-                            }
+                    //    // Check the length of the cell text to make sure it is cell values or some cell values
+                    //    if (cell.Length > 3)
+                    //    {
+                    //        for (int j = 0; j < names.Length; j++)
+                    //        {
+                    //            if (names[j] == cell.Substring(mathExpression.mathSymbol[4] + 1, 1))
+                    //            {
+                    //                gridProperty.column[1] = j;
+                    //                break;
+                    //            }
+                    //            else
+                    //            {
+                    //                gridProperty.column[1] = -1;
+                    //            }
+                    //        }
 
-                            //gridProperty.column = Alphabet.AlphabetLetter(mathExpression, cell, e.RowIndex, 1);
+                    //        //gridProperty.column = Alphabet.AlphabetLetter(mathExpression, cell, e.RowIndex, 1);
 
-                            //Check if a cell value is used or if it is a fixed numerical value
-                            if (gridProperty.column[1] != -1)
-                            {
-                                //If a cell value is used use the cell value
-                                gridProperty.row[1] = Convert.ToInt32(cell.Substring(mathExpression.mathSymbol[4] + 2));
-                                if (dataGridView.Rows[gridProperty.row[1] - 1].Cells[gridProperty.column[1]].Value != null)
-                                {
-                                    expresionValue.value[1] = dataGridView.Rows[gridProperty.row[1] - 1].Cells[gridProperty.column[1]].Value.ToString();
-                                }
-                            }
-                            else
-                            {
-                                gridProperty.row[1] = Convert.ToInt32(cell.Substring(mathExpression.mathSymbol[4] + 1));
-                                expresionValue.value[1] = gridProperty.row[1].ToString();
-                            }
-                        }
-                        else
-                        {
-                            mathExpression.mathCalculationSymbol = "default";
-                        }
+                    //        //Check if a cell value is used or if it is a fixed numerical value
+                    //        if (gridProperty.column[1] != -1)
+                    //        {
+                    //            //If a cell value is used use the cell value
+                    //            gridProperty.row[1] = Convert.ToInt32(cell.Substring(mathExpression.mathSymbol[4] + 2));
+                    //            if (dataGridView.Rows[gridProperty.row[1] - 1].Cells[gridProperty.column[1]].Value != null)
+                    //            {
+                    //                expresionValue.value[1] = dataGridView.Rows[gridProperty.row[1] - 1].Cells[gridProperty.column[1]].Value.ToString();
+                    //            }
+                    //        }
+                    //        else
+                    //        {
+                    //            gridProperty.row[1] = Convert.ToInt32(cell.Substring(mathExpression.mathSymbol[4] + 1));
+                    //            expresionValue.value[1] = gridProperty.row[1].ToString();
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        mathExpression.mathCalculationSymbol = "default";
+                    //    }
 
-                        //Switch to call the right Mathermatical Expression
-                        switch (mathExpression.mathCalculationSymbol)
-                        {
-                            case "+":
-                                dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.Add(expresionValue);
-                                break;
-                            case "-":
-                                dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.Subtract(expresionValue);
-                                break;
-                            case "*":
-                                dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.Multiply(expresionValue);
-                                break;
-                            case "/":
-                                dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.Devide(expresionValue);
-                                break;
-                            default:
-                               // dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = expresionValue.value[0];
-                                break;
-                        }
-                    }
+                    //    //Switch to call the right Mathermatical Expression
+                    //    switch (mathExpression.mathCalculationSymbol)
+                    //    {
+                    //        case "+":
+                    //            dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.Add(expresionValue);
+                    //            break;
+                    //        case "-":
+                    //            dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.Subtract(expresionValue);
+                    //            break;
+                    //        case "*":
+                    //            dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.Multiply(expresionValue);
+                    //            break;
+                    //        case "/":
+                    //            dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.Devide(expresionValue);
+                    //            break;
+                    //        default:
+                    //           // dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = expresionValue.value[0];
+                    //            break;
+                    //    }
+                    //}
                 }
             }
             catch (Exception ex)
