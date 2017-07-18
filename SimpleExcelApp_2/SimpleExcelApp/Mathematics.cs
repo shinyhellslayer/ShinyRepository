@@ -129,10 +129,6 @@ namespace SimpleExcelApp
                         if (count == 0)
                         {
                             count = text.Split('-').Length - 1;
-                            if (count == 0)
-                            {
-                                answer = Calcultation(text.Substring(1), ExpressionLocal, cells);
-                            }
                         }
                         else
                         {
@@ -187,7 +183,6 @@ namespace SimpleExcelApp
                 bool matchMinus = test[i].Contains("-");
                 bool matchMultiply = test[i].Contains("*");
                 bool matchDivide = test[i].Contains("/");
-                bool matchPlus = test[i].Contains("+");
                 //string match = Array.Find(test, n => n.Contains("-"));
                 //if (!string.IsNullOrEmpty(match))
                 if (!string.IsNullOrEmpty(test[i]))
@@ -201,10 +196,7 @@ namespace SimpleExcelApp
 
                             for (int g = 0; g < test2.Length; g++)
                             {
-                                if (matchMinus == true || matchDivide == true || matchMultiply == true)
-                                {
-                                    test2[g] = Calcultation(test2[g], ExpressionLocal, 1);
-                                }
+                                test2[g] = Calcultation(test2[g], ExpressionLocal, 1);
                             }
 
                             ExpressionLocal.value = test2;
@@ -222,16 +214,9 @@ namespace SimpleExcelApp
                         {
                             string[] test2 = test[i].Substring(0).Split('*');
 
-                            for (int g = 0; g < test2.Length; g++)
+                            for(int g = 0; g<test2.Length;g++)
                             {
-                            //    bool matchMinus = test[i].Contains("-");
-                            //    bool matchMultiply = test[i].Contains("*");
-                            //    bool matchDivide = test[i].Contains("/");
-                            //    bool matchPlus = test[i].Contains("+");
-                                if (matchMinus == true || matchDivide == true || matchPlus == true)
-                                {
-                                    test2[g] = Calcultation(test2[g], ExpressionLocal, 1);
-                                }
+                                test2[g] = Calcultation(test2[g],ExpressionLocal,1);
                             }
 
                             ExpressionLocal.value = test2;
@@ -248,49 +233,10 @@ namespace SimpleExcelApp
                         if (test[i].Substring(0, 1) != "-")
                         {
                             string[] test2 = test[i].Substring(0).Split('/');
-
-                            for (int g = 0; g < test2.Length; g++)
-                            {
-                                //    bool matchMinus = test[i].Contains("-");
-                                //    bool matchMultiply = test[i].Contains("*");
-                                //    bool matchDivide = test[i].Contains("/");
-                                //    bool matchPlus = test[i].Contains("+");
-                                if (matchMinus == true || matchMultiply == true || matchPlus == true)
-                                {
-                                    test2[g] = Calcultation(test2[g], ExpressionLocal, 1);
-                                }
-                            }
-
                             ExpressionLocal.value = test2;
                             // value = Convert.ToInt32(test2[0]) - Convert.ToInt32(test2[1]);
 
                             value = Devide2(ExpressionLocal, ExpressionLocal.value.Length);
-                            test[i] = value;
-                        }
-                    }
-                    if (matchPlus == true)
-                    {
-                        // if (match.Substring(0, 1) != "-")
-                        if (test[i].Substring(0, 1) != "-")
-                        {
-                            string[] test2 = test[i].Substring(0).Split('+');
-
-                            for (int g = 0; g < test2.Length; g++)
-                            {
-                                //    bool matchMinus = test[i].Contains("-");
-                                //    bool matchMultiply = test[i].Contains("*");
-                                //    bool matchDivide = test[i].Contains("/");
-                                //    bool matchPlus = test[i].Contains("+");
-                                if (matchMinus == true || matchDivide == true || matchMultiply == true)
-                                {
-                                    test2[g] = Calcultation(test2[g], ExpressionLocal, 1);
-                                }
-                            }
-
-                            ExpressionLocal.value = test2;
-                            // value = Convert.ToInt32(test2[0]) - Convert.ToInt32(test2[1]);
-
-                            value = Add2(ExpressionLocal, ExpressionLocal.value.Length);
                             test[i] = value;
                         }
                     }

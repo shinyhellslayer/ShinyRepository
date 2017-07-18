@@ -92,17 +92,230 @@ namespace SimpleExcelApp
             MathExpression mathExpression = new MathExpression();
             ExpressionValues expresionValue = new ExpressionValues();
             GridProperty gridProperty = new GridProperty();
+            int count = -1;
 
             try
             {
                 if (dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
                 {
                     string cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                    string cellNew = null;
+                    if (cell.Substring(0,1) == "=")
+                    {
+                        gridProperty.column = new int[dataGridView.ColumnCount];
+                        gridProperty.row = new int[dataGridView.RowCount];
+                        expresionValue.value = new string[dataGridView.ColumnCount];
 
-                    //Define the Mathematical expressions needed and check the value that wi determine the calculation
-                    // mathExpression = math.MathExpression(cell, dataGridView.ColumnCount);
+                        //Define the Mathematical expressions needed and check the value that wi determine the calculation
+                        // mathExpression = math.MathExpression(cell, dataGridView.ColumnCount);
 
-                    dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.MathExpression(cell, dataGridView.ColumnCount);
+                        count = cell.Split('*').Length - 1;
+
+                        if (count == 0)
+                        {
+                            count = cell.Split('/').Length - 1;
+                            if (count == 0)
+                            {
+                                count = cell.Split('+').Length - 1;
+                                if (count == 0)
+                                {
+                                    count = cell.Split('-').Length - 1;
+                                    if(count!= 0)
+                                    {
+                                        string[] test = cell.Substring(1).Split('-');
+                                        int n = 0;
+
+                                        for (int j = 0; j < test.Length; j++)
+                                        {
+                                            if (false == int.TryParse(test[j], out n))
+                                            {
+                                                Alphabet.AlphabetEnum rowIndex = (Alphabet.AlphabetEnum)e.RowIndex;
+                                                string[] names = Enum.GetNames(rowIndex.GetType());
+                                                // Check if a cell value is used with the enum provided
+                                                for (int i = 0; i < names.Length; i++)
+                                                {
+                                                    if (names[i] == test[j].Substring(0, 1))
+                                                    {
+                                                        gridProperty.column[j] = i;
+                                                        break;
+                                                    }
+                                                }
+                                                gridProperty.row[j] = Convert.ToInt32(test[j].Substring(1));
+
+                                                expresionValue.value[j] = dataGridView.Rows[gridProperty.row[j] - 1].Cells[gridProperty.column[j]].Value.ToString();
+                                            }
+                                        }
+
+                                        for (int k = 0; k <= count; k++)
+                                        {
+                                            if (k == 0)
+                                            {
+                                                cellNew = expresionValue.value[k] + "-";
+                                            }
+                                            else
+                                            {
+                                                if (count == k)
+                                                {
+                                                    cellNew = cellNew + expresionValue.value[k];
+                                                }
+                                                else
+                                                {
+                                                    cellNew = cellNew + expresionValue.value[k] + "-";
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    string[] test = cell.Substring(1).Split('+');
+                                    int n = 0;
+
+                                    for (int j = 0; j < test.Length; j++)
+                                    {
+                                        if (false == int.TryParse(test[j], out n))
+                                        {
+                                            Alphabet.AlphabetEnum rowIndex = (Alphabet.AlphabetEnum)e.RowIndex;
+                                            string[] names = Enum.GetNames(rowIndex.GetType());
+                                            // Check if a cell value is used with the enum provided
+                                            for (int i = 0; i < names.Length; i++)
+                                            {
+                                                if (names[i] == test[j].Substring(0, 1))
+                                                {
+                                                    gridProperty.column[j] = i;
+                                                    break;
+                                                }
+                                            }
+                                            gridProperty.row[j] = Convert.ToInt32(test[j].Substring(1));
+
+                                            expresionValue.value[j] = dataGridView.Rows[gridProperty.row[j] - 1].Cells[gridProperty.column[j]].Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            expresionValue.value[j] = test[j];
+                                        }
+                                    }
+
+                                    for (int k = 0; k <= count; k++)
+                                    {
+                                        if (k == 0)
+                                        {
+                                            cellNew = expresionValue.value[k] + "+";
+                                        }
+                                        else
+                                        {
+                                            if (count == k)
+                                            {
+                                                cellNew = cellNew + expresionValue.value[k];
+                                            }
+                                            else
+                                            {
+                                                cellNew = cellNew + expresionValue.value[k] + "+";
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                string[] test = cell.Substring(1).Split('/');
+                                int n = 0;
+
+                                for (int j = 0; j < test.Length; j++)
+                                {
+                                    if (false == int.TryParse(test[j], out n))
+                                    {
+                                        Alphabet.AlphabetEnum rowIndex = (Alphabet.AlphabetEnum)e.RowIndex;
+                                        string[] names = Enum.GetNames(rowIndex.GetType());
+                                        // Check if a cell value is used with the enum provided
+                                        for (int i = 0; i < names.Length; i++)
+                                        {
+                                            if (names[i] == test[j].Substring(0, 1))
+                                            {
+                                                gridProperty.column[j] = i;
+                                                break;
+                                            }
+                                        }
+                                        gridProperty.row[j] = Convert.ToInt32(test[j].Substring(1));
+
+                                        expresionValue.value[j] = dataGridView.Rows[gridProperty.row[j] - 1].Cells[gridProperty.column[j]].Value.ToString();
+                                    }
+                                }
+
+                                for (int k = 0; k <= count; k++)
+                                {
+                                    if (k == 0)
+                                    {
+                                        cellNew = expresionValue.value[k] + "/";
+                                    }
+                                    else
+                                    {
+                                        if (count == k)
+                                        {
+                                            cellNew = cellNew + expresionValue.value[k];
+                                        }
+                                        else
+                                        {
+                                            cellNew = cellNew + expresionValue.value[k] + "/";
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                        else
+                        {
+
+                            string[] test = cell.Substring(1).Split('*');
+                            int n = 0;
+
+                            for (int j = 0; j < test.Length; j++)
+                            {
+                                if (false == int.TryParse(test[j], out n))
+                                {
+                                    Alphabet.AlphabetEnum rowIndex = (Alphabet.AlphabetEnum)e.RowIndex;
+                                    string[] names = Enum.GetNames(rowIndex.GetType());
+                                    // Check if a cell value is used with the enum provided
+                                    for (int i = 0; i < names.Length; i++)
+                                    {
+                                        if (names[i] == test[j].Substring(0, 1).ToUpper())
+                                        {
+                                            gridProperty.column[j] = i;
+                                            break;
+                                        }
+                                    }
+                                    gridProperty.row[j] = Convert.ToInt32(test[j].Substring(1));
+
+                                    expresionValue.value[j] = dataGridView.Rows[gridProperty.row[j] - 1].Cells[gridProperty.column[j]].Value.ToString();
+                                }
+                            }
+
+                            for (int k = 0;k<=count;k++)
+                            {
+                                if (k == 0)
+                                {
+                                    cellNew = expresionValue.value[k] + "*";
+                                }
+                                else
+                                {
+                                    if (count == k)
+                                    {
+                                        cellNew = cellNew + expresionValue.value[k];
+                                    }
+                                    else
+                                    {
+                                        cellNew = cellNew + expresionValue.value[k] + "*";
+                                    }
+                                }
+                                
+                            }
+
+                        }
+
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = math.MathExpression("="+cellNew, 1);
+                    }
 
                     //Check if a calculation needs to happen
                     //if (mathExpression.mathExpressionSymbol != -1)
