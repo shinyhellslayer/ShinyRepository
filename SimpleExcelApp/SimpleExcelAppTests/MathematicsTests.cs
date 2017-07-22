@@ -22,7 +22,7 @@ namespace SimpleExcelApp.Tests
             expresionValue.value = new string[2];
             expresionValue.value[0] = "6";
             expresionValue.value[1] = "5";
-            string plus = math.Add(expresionValue);
+            string plus = math.Add(expresionValue, 1);
             //Assert.Fail();
         }
 
@@ -32,7 +32,7 @@ namespace SimpleExcelApp.Tests
             expresionValue.value = new string[2];
             expresionValue.value[0] = "6";
             expresionValue.value[1] = "5";
-            string subtract = math.Subtract(expresionValue);
+            string subtract = math.Subtract(expresionValue, 1);
             // Assert.Fail();
         }
 
@@ -42,7 +42,7 @@ namespace SimpleExcelApp.Tests
             expresionValue.value = new string[2];
             expresionValue.value[0] = "6";
             expresionValue.value[1] = "5";
-            string devide = math.Devide(expresionValue);
+            string devide = math.Devide(expresionValue, 1);
             // Assert.Fail();
         }
 
@@ -52,16 +52,25 @@ namespace SimpleExcelApp.Tests
             expresionValue.value = new string[2];
             expresionValue.value[0] = "6";
             expresionValue.value[1] = "5";
-            string multiply = math.Multiply(expresionValue);
+            string multiply = math.Multiply(expresionValue, 1);
             // Assert.Fail();
         }
 
         [TestMethod()]
         public void mathExpressionTest()
         {
-            MathExpression mathExpressionLocal = new MathExpression();
-            string text = "=1+1";
-            //mathExpressionLocal = math.MathExpression(text,2);
+            string text = "=1+2-1";
+            string result = math.MathExpression(text,1);
+        }
+
+        [TestMethod()]
+        public void CalcultationTest()
+        {
+
+            ExpressionValues ExpressionLocal = new ExpressionValues();
+            ExpressionLocal.value = new string[100];
+            string text = "1+2";
+            string result = math.Calcultation(text, ExpressionLocal, 1);
         }
     }
 }

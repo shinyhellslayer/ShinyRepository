@@ -9,73 +9,80 @@ namespace SimpleExcelApp
 {
     public class Mathematics
     {
-        public string Add(ExpressionValues values)
-        {
-            return (Convert.ToInt32(values.value[0]) + Convert.ToInt32(values.value[1])).ToString();
-        }
-
-        public string Add2(ExpressionValues values, int loop)
+        /// <summary>
+        /// Add function
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="loop"></param>
+        /// <returns></returns>
+        public string Add(ExpressionValues values, int loop)
         {
             if (loop == 1)
             {
                 return values.value[0];
             }
-
-            // int valuescheck = Convert.ToInt32(values.value[loop-1]) + Convert.ToInt32(values.value[loop - 2]);
-            // values.value[loop - 2] = valuescheck.ToString();
+            //recursive process to do the add function 
             values.value[loop - 2] = (Convert.ToDouble(values.value[loop - 1]) + Convert.ToDouble(values.value[loop - 2])).ToString();
-            return Add2(values, loop - 1);
-            //return null;
+            return Add(values, loop - 1);
         }
-
-        public string Subtract(ExpressionValues values)
-        {
-            return (Convert.ToInt32(values.value[0]) - Convert.ToInt32(values.value[1])).ToString();
-        }
-
-        public string Subtract2(ExpressionValues values, int loop)
+        
+        /// <summary>
+        /// Subtract function
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="loop"></param>
+        /// <returns></returns>
+        public string Subtract(ExpressionValues values, int loop)
         {
             if (loop == 1)
             {
                 return values.value[0];
             }
-            //int check = Math.Sign(Convert.ToInt32("-1"));
+            //recursive process to do the subtract function 
             int test = Convert.ToInt32(values.value[loop - 2]) - Convert.ToInt32(values.value[loop - 1]);
             values.value[loop - 2] = (Convert.ToDouble(values.value[loop - 2]) - Convert.ToDouble(values.value[loop - 1])).ToString();
-            return Subtract2(values, loop - 1);
+            return Subtract(values, loop - 1);
         }
-
-        public string Devide(ExpressionValues values)
-        {
-            return (Convert.ToInt32(values.value[0]) / Convert.ToInt32(values.value[1])).ToString();
-        }
-
-        public string Devide2(ExpressionValues values, int loop)
+        
+        /// <summary>
+        /// Devide function
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="loop"></param>
+        /// <returns></returns>
+        public string Devide(ExpressionValues values, int loop)
         {
             if (loop == 1)
             {
                 return values.value[0];
             }
+            //recursive process to do the devide function 
             values.value[loop - 2] = (Convert.ToDouble(values.value[loop - 2]) / Convert.ToDouble(values.value[loop - 1])).ToString();
-            return Devide2(values, loop - 1);
+            return Devide(values, loop - 1);
         }
 
-        public string Multiply(ExpressionValues values)
-        {
-            return (Convert.ToInt32(values.value[0]) * Convert.ToInt32(values.value[1])).ToString();
-        }
-
-        public string Multiply2(ExpressionValues values, int loop)
+        /// <summary>
+        /// Multiply function
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="loop"></param>
+        /// <returns></returns>
+        public string Multiply(ExpressionValues values, int loop)
         {
             if (loop == 1)
             {
                 return values.value[0];
             }
+            //recursive process to do the multiply function 
             values.value[loop - 2] = (Convert.ToDouble(values.value[loop - 1]) * Convert.ToDouble(values.value[loop - 2])).ToString();
-            return Multiply2(values, loop - 1);
+            return Multiply(values, loop - 1);
         }
-
-        //public MathExpression MathExpression(string text, int cells)
+        /// <summary>
+        /// Initial mathematical call and manupilation of string value
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="cells"></param>
+        /// <returns></returns>
         public string MathExpression(string text, int cells)
         {
             try
@@ -84,10 +91,10 @@ namespace SimpleExcelApp
                 MathExpression mathExpressionLocal = new MathExpression();
                 ExpressionValues ExpressionLocal = new ExpressionValues();
 
-                ExpressionLocal.value = new string[5];
+                ExpressionLocal.value = new string[100];
                 int count = -1;
                 string answer = null;
-
+                //split the string given to validate what mathematical functions to call and calculations to do
                 count = text.Split('*').Length - 1;
 
                 if (count == 0)
@@ -99,7 +106,7 @@ namespace SimpleExcelApp
                         if (count == 0)
                         {
                             count = text.Split('-').Length - 1;
-                            //if
+                            answer = Calcultation(text.Substring(1), ExpressionLocal, count);
                         }
                         else
                         {
@@ -112,6 +119,14 @@ namespace SimpleExcelApp
                         if (count == 0)
                         {
                             count = text.Split('-').Length - 1;
+                            if (count == 0)
+                            {
+                                answer = Calcultation(text.Substring(1), ExpressionLocal, cells);
+                            }
+                            else
+                            {
+                                    answer = Calcultation(text.Substring(1), ExpressionLocal, count);
+                            }
                         }
                         else
                         {
@@ -133,6 +148,10 @@ namespace SimpleExcelApp
                             {
                                 answer = Calcultation(text.Substring(1), ExpressionLocal, cells);
                             }
+                            else
+                            {
+                                answer = Calcultation(text.Substring(1), ExpressionLocal, cells);
+                            }
                         }
                         else
                         {
@@ -146,24 +165,6 @@ namespace SimpleExcelApp
                 }
 
                 return answer;
-
-                //mathExpressionLocal.mathSymbol = new int[cells];
-                //mathExpressionLocal.mathSymbol[0] = text.IndexOf('+');
-                //mathExpressionLocal.mathSymbol[1] = text.IndexOf('-');
-                //mathExpressionLocal.mathSymbol[2] = text.IndexOf('*');
-                //mathExpressionLocal.mathSymbol[3] = text.IndexOf('/');
-                //mathExpressionLocal.mathExpressionSymbol = text.IndexOf('=');
-
-                ////Check which mathematical expression is used 
-                //for (int check = 0; check < mathExpressionLocal.mathSymbol.Length; check++)
-                //{
-                //    if (mathExpressionLocal.mathSymbol[check] != -1)
-                //    {
-                //        mathExpressionLocal.mathSymbol[4] = mathExpressionLocal.mathSymbol[check];
-                //        mathExpressionLocal.mathCalculationSymbol = text.Substring(mathExpressionLocal.mathSymbol[check], 1);
-                //    }
-                //}
-                //return mathExpressionLocal;
             }
             catch (Exception ex)
             {
@@ -172,147 +173,120 @@ namespace SimpleExcelApp
             }
         }
 
-
+        /// <summary>
+        /// Recursive calculation method for all calculations needed
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="ExpressionLocal"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
         public string Calcultation(string text, ExpressionValues ExpressionLocal, int length)
         {
-            //int count = text.Split('+').Length - 1;
-            string[] test = text.Substring(0).Split('+');
-            // mathExpressionLocal.mathPlusSymbol = test;
-            // int value = 0;
+            //do the calculations with 2 values at a time for the whole string
+            string[] expression = text.Substring(0).Split('+');
             string answer = null;
             string value = null;
-            //int pos = Array.IndexOf(test, match);
-            for (int i = 0; i < test.Length; i++)
+            for (int i = 0; i < expression.Length; i++)
             {
-                bool matchMinus = test[i].Contains("-");
-                bool matchMultiply = test[i].Contains("*");
-                bool matchDivide = test[i].Contains("/");
-                bool matchPlus = test[i].Contains("+");
-                //string match = Array.Find(test, n => n.Contains("-"));
-                //if (!string.IsNullOrEmpty(match))
-                if (!string.IsNullOrEmpty(test[i]))
+                // check which mathematical expressions where passed
+                bool matchMinus = expression[i].Contains("-");
+                bool matchMultiply = expression[i].Contains("*");
+                bool matchDivide = expression[i].Contains("/");
+                bool matchPlus = expression[i].Contains("+");
+                if (!string.IsNullOrEmpty(expression[i]))
                 {
                     if (matchMinus == true)
                     {
-                        // if (match.Substring(0, 1) != "-")
-                        if (test[i].Substring(0, 1) != "-")
+                        if (expression[i].Substring(0, 1) != "-")
                         {
-                            string[] test2 = test[i].Substring(0).Split('-');
-
-                            for (int g = 0; g < test2.Length; g++)
+                            string[] subExpression = expression[i].Substring(0).Split('-');
+                            //do the calculations for each expression
+                            for (int g = 0; g < subExpression.Length; g++)
                             {
-                                if (matchMinus == true || matchDivide == true || matchMultiply == true)
+                                if (matchPlus == true || matchDivide == true || matchMultiply == true)
                                 {
-                                    test2[g] = Calcultation(test2[g], ExpressionLocal, 1);
+                                    subExpression[g] = Calcultation(subExpression[g], ExpressionLocal, 1);
                                 }
                             }
 
-                            ExpressionLocal.value = test2;
-                            // value = Convert.ToInt32(test2[0]) - Convert.ToInt32(test2[1]);
+                            ExpressionLocal.value = subExpression;
 
-                            value = Subtract2(ExpressionLocal, ExpressionLocal.value.Length);
-                            test[i] = value;
+                            value = Subtract(ExpressionLocal, ExpressionLocal.value.Length);
+                            expression[i] = value;
                         }
                     }
 
                     if (matchMultiply == true)
                     {
-                        // if (match.Substring(0, 1) != "-")
-                        if (test[i].Substring(0, 1) != "-")
+                        if (expression[i].Substring(0, 1) != "-")
                         {
-                            string[] test2 = test[i].Substring(0).Split('*');
-
-                            for (int g = 0; g < test2.Length; g++)
+                            string[] subExpression = expression[i].Substring(0).Split('*');
+                            //do the calculations for each expression
+                            for (int g = 0; g < subExpression.Length; g++)
                             {
-                            //    bool matchMinus = test[i].Contains("-");
-                            //    bool matchMultiply = test[i].Contains("*");
-                            //    bool matchDivide = test[i].Contains("/");
-                            //    bool matchPlus = test[i].Contains("+");
                                 if (matchMinus == true || matchDivide == true || matchPlus == true)
                                 {
-                                    test2[g] = Calcultation(test2[g], ExpressionLocal, 1);
+                                    subExpression[g] = Calcultation(subExpression[g], ExpressionLocal, 1);
                                 }
                             }
 
-                            ExpressionLocal.value = test2;
-                            // value = Convert.ToInt32(test2[0]) - Convert.ToInt32(test2[1]);
-
-                            value = Multiply2(ExpressionLocal, ExpressionLocal.value.Length);
-                            test[i] = value;
+                            ExpressionLocal.value = subExpression;
+                            value = Multiply(ExpressionLocal, ExpressionLocal.value.Length);
+                            expression[i] = value;
                         }
                     }
 
                     if (matchDivide == true)
                     {
-                        // if (match.Substring(0, 1) != "-")
-                        if (test[i].Substring(0, 1) != "-")
+                        if (expression[i].Substring(0, 1) != "-")
                         {
-                            string[] test2 = test[i].Substring(0).Split('/');
-
-                            for (int g = 0; g < test2.Length; g++)
+                            string[] subExpression = expression[i].Substring(0).Split('/');
+                            //do the calculations for each expression
+                            for (int g = 0; g < subExpression.Length; g++)
                             {
-                                //    bool matchMinus = test[i].Contains("-");
-                                //    bool matchMultiply = test[i].Contains("*");
-                                //    bool matchDivide = test[i].Contains("/");
-                                //    bool matchPlus = test[i].Contains("+");
                                 if (matchMinus == true || matchMultiply == true || matchPlus == true)
                                 {
-                                    test2[g] = Calcultation(test2[g], ExpressionLocal, 1);
+                                    subExpression[g] = Calcultation(subExpression[g], ExpressionLocal, 1);
                                 }
                             }
 
-                            ExpressionLocal.value = test2;
-                            // value = Convert.ToInt32(test2[0]) - Convert.ToInt32(test2[1]);
-
-                            value = Devide2(ExpressionLocal, ExpressionLocal.value.Length);
-                            test[i] = value;
+                            ExpressionLocal.value = subExpression;
+                            value = Devide(ExpressionLocal, ExpressionLocal.value.Length);
+                            expression[i] = value;
                         }
                     }
                     if (matchPlus == true)
                     {
-                        // if (match.Substring(0, 1) != "-")
-                        if (test[i].Substring(0, 1) != "-")
+                        if (expression[i].Substring(0, 1) != "-")
                         {
-                            string[] test2 = test[i].Substring(0).Split('+');
-
-                            for (int g = 0; g < test2.Length; g++)
+                            string[] subExpression = expression[i].Substring(0).Split('+');
+                            //do the calculations for each expression
+                            for (int g = 0; g < subExpression.Length; g++)
                             {
-                                //    bool matchMinus = test[i].Contains("-");
-                                //    bool matchMultiply = test[i].Contains("*");
-                                //    bool matchDivide = test[i].Contains("/");
-                                //    bool matchPlus = test[i].Contains("+");
                                 if (matchMinus == true || matchDivide == true || matchMultiply == true)
                                 {
-                                    test2[g] = Calcultation(test2[g], ExpressionLocal, 1);
+                                    subExpression[g] = Calcultation(subExpression[g], ExpressionLocal, 1);
                                 }
                             }
 
-                            ExpressionLocal.value = test2;
-                            // value = Convert.ToInt32(test2[0]) - Convert.ToInt32(test2[1]);
-
-                            value = Add2(ExpressionLocal, ExpressionLocal.value.Length);
-                            test[i] = value;
+                            ExpressionLocal.value = subExpression;
+                            value = Add(ExpressionLocal, ExpressionLocal.value.Length);
+                            expression[i] = value;
                         }
                     }
                 }
-                if (i == (test.Length - 1))
+                if (i == (expression.Length - 1))
                 {
-                    ExpressionLocal.value = test;
-                    answer = Add2(ExpressionLocal, ExpressionLocal.value.Length);
+                    ExpressionLocal.value = expression;
+                    answer = Add(ExpressionLocal, ExpressionLocal.value.Length);
                 }
             }
-
-
+            
             if (length == 1)
             {
                 return answer;
             }
-
-            // int valuescheck = Convert.ToInt32(values.value[loop-1]) + Convert.ToInt32(values.value[loop - 2]);
-            // values.value[loop - 2] = valuescheck.ToString();
             return Calcultation(text, ExpressionLocal, length - 1);
-
-           // return answer;
         }
     }
 }
