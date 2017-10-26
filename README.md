@@ -14,7 +14,7 @@ Running the tests
 
 The automated tests are in a seperate project on the same solution, all you will need to do is right click on the Mathematics.cs file, then right click and Run Test.
 
-Explain what these tests test and why
+Explain what the tests test and why.
 
 The test in the Mathematics Class file is there to check the logic of the mathematics.
 
