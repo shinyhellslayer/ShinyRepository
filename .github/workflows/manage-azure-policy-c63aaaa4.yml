@@ -1,0 +1,38 @@
+name: manage-azure-policy-c63aaaa4
+on:
+  workflow_dispatch:
+    inputs:
+      remarks:
+        description: 'Reason for triggering the workflow run'
+        required: false
+        default: 'Updating Azure Policies'
+
+
+## Uncomment the following if you wish to automatically trigger workflow run with every commit
+#
+#  push:
+#    paths:
+#      - 'AzurePolicy/initiatives/Audit_Windows_VMs_022d5ed0-1020-4c29-8b04-86e1a02db278/**'
+#      - 'AzurePolicy/initiatives/Audit_Resource_Location_022d5ed0-1020-4c29-8b04-86e1a02db764/**'
+#      - 'AzurePolicy/initiatives/Allowed_Resource_Locations_56c0bf03-9292-4778-bd89-4a327ca53026/**'
+#      - 'AzurePolicy/policies/Audit_virtual_machines_without_disaster_recovery_configured_0015ea4d-51ff-4ce3-8d8c-f3f8f0179a56/**'
+#      - .github/workflows/manage-azure-policy-c63aaaa4.yml
+jobs:
+  apply-azure-policy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS_c63aaaa4}}
+        allow-no-subscriptions: true
+    - name: Create or Update Azure Policies
+      uses: azure/manage-azure-policy@v0
+      with:
+        paths: |
+          AzurePolicy/initiatives/Audit_Windows_VMs_022d5ed0-1020-4c29-8b04-86e1a02db278/**
+          AzurePolicy/initiatives/Audit_Resource_Location_022d5ed0-1020-4c29-8b04-86e1a02db764/**
+          AzurePolicy/initiatives/Allowed_Resource_Locations_56c0bf03-9292-4778-bd89-4a327ca53026/**
+          AzurePolicy/policies/Audit_virtual_machines_without_disaster_recovery_configured_0015ea4d-51ff-4ce3-8d8c-f3f8f0179a56/**
